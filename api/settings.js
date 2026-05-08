@@ -2,7 +2,20 @@ const { getDb, sql } = require('./utils/db');
 const { requireAuth } = require('./utils/auth');
 
 export default async function handler(req, res) {
-    if (req.method !== 'PUT') return res.status(405).send('Method Not Allowed');
+    // CORS headers
+    res.setHeader('Access-Control-Allow-Origin', 'https://oogway-gc.github.io');
+    res.setHeader('Access-Control-Allow-Methods', 'PUT, OPTIONS');
+    // Notice we added Authorization here as well
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // Handle preflight request
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    if (req.method !== 'PUT') {
+        return res.status(405).send('Method Not Allowed');
+    }
     
     try {
         const user = requireAuth(req);

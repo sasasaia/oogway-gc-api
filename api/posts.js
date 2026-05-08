@@ -7,6 +7,17 @@ export const config = {
 };
 
 export default async function handler(req, res) {
+    // CORS headers
+    res.setHeader('Access-Control-Allow-Origin', 'https://oogway-gc.github.io');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    // Notice we added Authorization here so JWT tokens can be sent!
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // Handle preflight request
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     try {
         const user = requireAuth(req);
         const pool = await getDb();
